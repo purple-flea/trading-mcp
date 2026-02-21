@@ -1,0 +1,59 @@
+{
+  "name": "@purpleflea/trading-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Purple Flea Trading — 275+ perpetual markets (stocks, crypto, commodities, forex, indices) via Hyperliquid. TSLA, NVDA, GOLD, BTC and more with up to 50x leverage.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "trading-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "ai-agent",
+    "trading",
+    "perpetual-futures",
+    "stocks",
+    "commodities",
+    "gold",
+    "silver",
+    "tesla",
+    "nvidia",
+    "hyperliquid",
+    "defi",
+    "crypto",
+    "forex",
+    "leverage",
+    "purple-flea",
+    "claude",
+    "openai",
+    "cursor"
+  ],
+  "author": "Purple Flea",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/purple-flea/trading-mcp.git"
+  },
+  "homepage": "https://github.com/purple-flea/trading-mcp",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}
