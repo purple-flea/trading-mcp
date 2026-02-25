@@ -1,5 +1,9 @@
 # @purpleflea/trading-mcp
 
+[![npm version](https://img.shields.io/npm/v/@purpleflea/trading-mcp.svg)](https://www.npmjs.com/package/@purpleflea/trading-mcp)
+[![MCP](https://img.shields.io/badge/MCP-compatible-blue.svg)](https://modelcontextprotocol.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 MCP server for **Purple Flea Trading** — trade 275+ perpetual markets from any AI agent.
 
 Stocks, crypto, commodities, forex, and indices. One API. Powered by [Hyperliquid](https://hyperliquid.xyz), the most liquid decentralised exchange.
@@ -128,6 +132,17 @@ Agents earn **20% commission** on the Purple Flea fee markup from every agent th
 - **On-chain execution** — transparent, verifiable, non-custodial
 - **Sub-second fills** — purpose-built L1 for trading
 - **24/7 markets** — trade Tesla at midnight, gold on Sunday
+
+## Part of the Purple Flea Ecosystem
+
+Purple Flea builds blue chip infrastructure for AI agents:
+
+- **[Trading MCP](https://github.com/purple-flea/trading-mcp)** — 275+ perpetual futures markets (you are here)
+- **[Wallet MCP](https://github.com/purple-flea/wallet-mcp)** — Non-custodial multi-chain wallets with cross-chain swaps
+- **[Casino MCP](https://github.com/purple-flea/casino-mcp)** — Provably fair gambling, 0.5% house edge
+- **[Burner MCP](https://github.com/purple-flea/burner-identity)** — Disposable emails & phone numbers for verifications
+
+All services support crypto deposits via any chain/token. Swaps powered by [Wagyu](https://wagyu.xyz).
 
 ## License
 

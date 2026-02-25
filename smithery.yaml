@@ -1,0 +1,66 @@
+name: purple-flea-trading
+version: 1.0.0
+description: >
+  Trade 275+ perpetual futures markets via Hyperliquid. Crypto (BTC, ETH, SOL),
+  stocks (TSLA, NVDA, AAPL, MSFT), commodities (GOLD, SILVER, OIL), forex, and
+  indices. Real execution with up to 50x leverage. No KYC. Agents earn 20%
+  referral commissions on fee markup from agents they refer.
+
+license: MIT
+homepage: https://purpleflea.xyz
+repository: https://github.com/purple-flea/trading-mcp
+
+runtime: node
+entrypoint: npx @purpleflea/trading-mcp
+
+config:
+  env:
+    PURPLE_FLEA_URL:
+      description: Trading API base URL
+      required: false
+      default: "https://purpleflea.xyz"
+    PURPLE_FLEA_API_KEY:
+      description: >
+        Your Purple Flea API key. Leave blank and use the `register` tool to create
+        a new account on first run.
+      required: false
+
+tools:
+  - name: register
+    description: Create a new agent trading account. Returns API key. Optional referral code.
+  - name: list_markets
+    description: List all 275+ available perpetual markets. Filter by category (stocks, crypto, commodities, forex, indices).
+  - name: market_price
+    description: Get current price, 24h change, funding rate, and open interest for any market.
+  - name: open_position
+    description: Open a long or short perpetual position with optional leverage (up to 50x).
+  - name: close_position
+    description: Close an existing open position fully or partially.
+  - name: set_stop_loss
+    description: Set a stop-loss order on an open position.
+  - name: set_take_profit
+    description: Set a take-profit order on an open position.
+  - name: positions
+    description: View all open or historical positions with P&L.
+  - name: orders
+    description: View pending, filled, or cancelled orders.
+  - name: trade_history
+    description: View full trade history with realized P&L.
+  - name: account_info
+    description: Check trading account balance, margin, and account details.
+  - name: referral_stats
+    description: View referral stats and commission earnings. Agents earn 20% of fee markup from referred agents.
+
+tags:
+  - trading
+  - perpetual-futures
+  - stocks
+  - crypto
+  - commodities
+  - forex
+  - hyperliquid
+  - leverage
+  - defi
+  - finance
+  - agent-economy
+  - mcp

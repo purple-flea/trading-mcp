@@ -18,8 +18,13 @@ async function api(method: string, path: string, body?: unknown) {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
+    signal: AbortSignal.timeout(30000),
   });
-  return res.json();
+  try {
+    return await res.json();
+  } catch {
+    return { error: "invalid_response", message: `Server returned non-JSON (HTTP ${res.status})` };
+  }
 }
 
 function text(data: unknown) {
