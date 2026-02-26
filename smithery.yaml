@@ -1,10 +1,10 @@
 name: purple-flea-trading
-version: 1.0.0
+version: 1.2.0
 description: >
   Trade 275+ perpetual futures markets via Hyperliquid. Crypto (BTC, ETH, SOL),
   stocks (TSLA, NVDA, AAPL, MSFT), commodities (GOLD, SILVER, OIL), forex, and
-  indices. Real execution with up to 50x leverage. No KYC. Agents earn 20%
-  referral commissions on fee markup from agents they refer.
+  indices. Real execution with up to 50x leverage. Copy trading — follow top
+  traders automatically. Trading signals. Earn 20% referral commissions.
 
 license: MIT
 homepage: https://purpleflea.xyz
@@ -15,41 +15,57 @@ entrypoint: npx @purpleflea/trading-mcp
 
 config:
   env:
-    PURPLE_FLEA_URL:
+    TRADING_API_URL:
       description: Trading API base URL
       required: false
-      default: "https://purpleflea.xyz"
-    PURPLE_FLEA_API_KEY:
+      default: "https://trading.purpleflea.com"
+    TRADING_API_KEY:
       description: >
-        Your Purple Flea API key. Leave blank and use the `register` tool to create
-        a new account on first run.
+        Your Purple Flea Trading API key. Leave blank and use the `register` tool
+        to create a new account on first run.
       required: false
 
 tools:
   - name: register
-    description: Create a new agent trading account. Returns API key. Optional referral code.
+    description: Create trading account. Returns API key. Optional referral code for 20% commission.
   - name: list_markets
-    description: List all 275+ available perpetual markets. Filter by category (stocks, crypto, commodities, forex, indices).
+    description: List all 275+ perpetual markets. Filter by stocks, crypto, commodities, forex, indices, rwa.
   - name: market_price
-    description: Get current price, 24h change, funding rate, and open interest for any market.
+    description: Get real-time price for any market from Hyperliquid's on-chain order book.
   - name: open_position
-    description: Open a long or short perpetual position with optional leverage (up to 50x).
+    description: Open a long or short position with leverage (up to 50x). REAL execution on Hyperliquid.
   - name: close_position
-    description: Close an existing open position fully or partially.
+    description: Close a position at market price. Returns realized P&L.
   - name: set_stop_loss
-    description: Set a stop-loss order on an open position.
+    description: Attach a stop-loss to a position. Auto-closes to limit downside.
   - name: set_take_profit
-    description: Set a take-profit order on an open position.
+    description: Attach a take-profit to a position. Auto-closes to lock in gains.
   - name: positions
-    description: View all open or historical positions with P&L.
+    description: View open positions with live P&L, margin, and liquidation levels.
   - name: orders
-    description: View pending, filled, or cancelled orders.
+    description: View orders — pending, filled, cancelled.
   - name: trade_history
-    description: View full trade history with realized P&L.
+    description: Full trade history with fill prices, fees, and realized P&L.
   - name: account_info
-    description: Check trading account balance, margin, and account details.
+    description: Account tier, leverage limits, volume, fees, P&L, referral code.
+  - name: copy_leaderboard
+    description: Top 10 traders by 30-day P&L. Find the best agents to copy.
+  - name: copy_follow
+    description: Start copy trading a leader. Set allocation, max position size, stop-loss %.
+  - name: copy_unfollow
+    description: Stop copy trading a leader. Open copied positions are closed automatically.
+  - name: copy_following
+    description: View all active copy subscriptions — who you're copying.
+  - name: copy_followers
+    description: View all agents that are copy trading you. Shows allocations.
+  - name: signals
+    description: Top 5 crypto + top 5 RWA trading opportunities by leverage score.
+  - name: gossip
+    description: Live agent count + referral program info. No auth required.
   - name: referral_stats
-    description: View referral stats and commission earnings. Agents earn 20% of fee markup from referred agents.
+    description: View referral earnings. Earn 20% of fee markup from agents you refer.
+  - name: referral_withdraw
+    description: Withdraw referral commissions to Base address. Min $1.00.
 
 tags:
   - trading
@@ -60,6 +76,7 @@ tags:
   - forex
   - hyperliquid
   - leverage
+  - copy-trading
   - defi
   - finance
   - agent-economy

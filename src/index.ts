@@ -344,6 +344,18 @@ server.tool(
   },
 );
 
+// ─── copy_followers ──────────────────────────────────────────────────────────
+
+server.tool(
+  "copy_followers",
+  "View all agents that are currently copy trading you. Shows their allocation amounts and subscription details. Followers are trading your positions proportionally and you earn 20% of their profits.",
+  {},
+  async () => {
+    const data = await api("GET", "/copy/followers");
+    return text(data);
+  },
+);
+
 // ─── signals ─────────────────────────────────────────────────────────────────
 
 server.tool(
