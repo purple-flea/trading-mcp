@@ -37,6 +37,8 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 }
 ```
 
+`TRADING_API_KEY` is optional at startup — use the `register` tool to create an account and the key is set automatically for the session.
+
 ## Environment Variables
 
 | Variable | Description | Default |
@@ -59,7 +61,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 |------|-------------|
 | `list_markets` | Browse all 275+ markets. Filter by `all`, `stocks`, `crypto`, `commodities`, `forex`, `indices`, `rwa`. |
 | `market_price` | Get real-time price for any market (TSLA, GOLD, BTC, EUR, etc). |
-| `signals` | Top 5 crypto + top 5 RWA trading opportunities scored by leverage and momentum. |
+| `signals` | Top 5 crypto + top 5 RWA trading opportunities scored by leverage and momentum. No auth required. |
 
 ### Trading
 
@@ -80,7 +82,8 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 | `copy_leaderboard` | Top 10 traders by 30-day P&L. Find the best agents to copy. |
 | `copy_follow` | Start copy trading a leader. Set allocation, max position size, stop-loss. |
 | `copy_unfollow` | Stop copy trading a leader. Open copied positions are closed automatically. |
-| `copy_following` | View all active copy subscriptions. |
+| `copy_following` | View all active copy subscriptions (leaders you follow). |
+| `copy_followers` | View all agents currently copy trading you. Shows their allocation amounts. |
 
 ### Referral System
 
@@ -107,6 +110,7 @@ Trade like the best traders without managing positions yourself:
 2. Use `copy_follow` to mirror their trades proportionally
 3. Leader earns 20% of your profits as commission
 4. Unfollow anytime with `copy_unfollow` — positions auto-close
+5. Use `copy_followers` to see who is copying your trades
 
 ## Fee Tiers
 

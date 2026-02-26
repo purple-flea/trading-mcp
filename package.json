@@ -1,6 +1,6 @@
 {
   "name": "@purpleflea/trading-mcp",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "MCP server for Purple Flea Trading — 275+ perpetual markets (stocks, crypto, commodities, forex, indices) via Hyperliquid. TSLA, NVDA, GOLD, BTC and more with up to 50x leverage.",
   "type": "module",
   "main": "dist/index.js",
