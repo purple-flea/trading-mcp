@@ -4,9 +4,7 @@
 [![MCP](https://img.shields.io/badge/MCP-compatible-blue.svg)](https://modelcontextprotocol.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-MCP server for **Purple Flea Trading** — trade 275+ perpetual markets from any AI agent.
-
-Stocks, crypto, commodities, forex, and indices. One API. Powered by [Hyperliquid](https://hyperliquid.xyz), the most liquid decentralised exchange.
+MCP server for **Purple Flea Trading** — trade 275+ perpetual markets from any AI agent. Stocks, crypto, commodities, forex, and indices. One API. Powered by [Hyperliquid](https://hyperliquid.xyz).
 
 ## Markets
 
@@ -18,51 +16,22 @@ Stocks, crypto, commodities, forex, and indices. One API. Powered by [Hyperliqui
 | **Indices** | 7 | SPX, JP225, DXY, XYZ100 | Up to 20x |
 | **Forex** | 2 | EUR, JPY | Up to 50x |
 
-All markets trade 24/7. No market hours, no weekends. Execution against Hyperliquid's on-chain order book with depth rivalling Binance.
+All markets trade 24/7. No market hours, no weekends.
 
-## Quick Start
+## Claude Desktop Configuration
 
-### Claude Desktop
-
-Add to your `claude_desktop_config.json`:
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
 
 ```json
 {
   "mcpServers": {
-    "trading": {
+    "purple-flea-trading": {
       "command": "npx",
       "args": ["-y", "@purpleflea/trading-mcp"],
       "env": {
-        "TRADING_API_KEY": "sk_trade_..."
+        "TRADING_API_URL": "https://trading.purpleflea.com",
+        "TRADING_API_KEY": "sk_trade_your_key_here"
       }
-    }
-  }
-}
-```
-
-### Claude Code
-
-```bash
-claude mcp add trading -- npx -y @purpleflea/trading-mcp
-```
-
-Set your API key:
-
-```bash
-export TRADING_API_KEY=sk_trade_...
-```
-
-### Cursor / VS Code
-
-Add to your MCP settings:
-
-```json
-{
-  "trading": {
-    "command": "npx",
-    "args": ["-y", "@purpleflea/trading-mcp"],
-    "env": {
-      "TRADING_API_KEY": "sk_trade_..."
     }
   }
 }
@@ -71,78 +40,88 @@ Add to your MCP settings:
 ## Environment Variables
 
 | Variable | Description | Default |
-|---|---|---|
-| `TRADING_API_KEY` | Your Purple Flea API key (`sk_trade_...`) | — |
-| `TRADING_API_URL` | API base URL | `http://localhost:3003` |
+|----------|-------------|---------|
+| `TRADING_API_URL` | Trading API base URL | `https://trading.purpleflea.com` |
+| `TRADING_API_KEY` | Your API key (`sk_trade_...`) | — |
 
 ## Tools
 
-### `register`
-Create a trading account. Returns an API key for authenticated access to all 275+ markets. Optionally provide a referral code.
+### Account
 
-### `list_markets`
-Browse all available markets by category — stocks, crypto, commodities, forex, indices, or real-world assets.
+| Tool | Description |
+|------|-------------|
+| `register` | Create trading account. Returns API key. Optional `referral_code` and `wallet_agent_id`. |
+| `account_info` | View tier, leverage limits, volume, fees, P&L, and referral code. |
 
-### `market_price`
-Get the real-time price for any market. Prices sourced from Hyperliquid's on-chain order book.
+### Markets
 
-### `open_position`
-Open a leveraged long or short position. Specify market, direction, size in USD, and leverage.
+| Tool | Description |
+|------|-------------|
+| `list_markets` | Browse all 275+ markets. Filter by `all`, `stocks`, `crypto`, `commodities`, `forex`, `indices`, `rwa`. |
+| `market_price` | Get real-time price for any market (TSLA, GOLD, BTC, EUR, etc). |
+| `signals` | Top 5 crypto + top 5 RWA trading opportunities scored by leverage and momentum. |
 
-### `close_position`
-Close an open position at the current market price. Returns realized P&L.
+### Trading
 
-### `set_stop_loss`
-Attach a stop-loss to an open position. Automatically closes at the specified price to limit downside.
+| Tool | Description |
+|------|-------------|
+| `open_position` | Open leveraged long or short. Specify coin, side, size_usd, leverage. |
+| `close_position` | Close position at market price. Returns realized P&L. |
+| `set_stop_loss` | Attach stop-loss to a position. Auto-closes at specified price. |
+| `set_take_profit` | Attach take-profit to a position. Auto-closes at profit target. |
+| `positions` | View open positions with live P&L. |
+| `orders` | View all orders (pending, filled, cancelled). |
+| `trade_history` | Full execution history with prices, fees, P&L. |
 
-### `set_take_profit`
-Attach a take-profit to an open position. Automatically closes at the specified price to lock in gains.
+### Copy Trading
 
-### `positions`
-View open positions with live prices, unrealized P&L, margin, and liquidation levels.
+| Tool | Description |
+|------|-------------|
+| `copy_leaderboard` | Top 10 traders by 30-day P&L. Find the best agents to copy. |
+| `copy_follow` | Start copy trading a leader. Set allocation, max position size, stop-loss. |
+| `copy_unfollow` | Stop copy trading a leader. Open copied positions are closed automatically. |
+| `copy_following` | View all active copy subscriptions. |
 
-### `orders`
-View pending and filled orders — market, limit, stop-loss, and take-profit.
+### Referral System
 
-### `trade_history`
-Full execution history with fill prices, fees, and realized P&L.
+| Tool | Description |
+|------|-------------|
+| `gossip` | Live agent count + referral program info. No auth required. |
+| `referral_stats` | View referral earnings and referred agent stats. |
+| `referral_withdraw` | Withdraw referral commissions to a Base/EVM address. Min $1.00. |
 
-### `account_info`
-Account details: tier, leverage limits, volume, fees, P&L, and referral code.
+## Referral System
 
-### `referral_stats`
-Referral earnings and statistics. Agents earn 20% commission on fee markup from referred traders.
+Agents earn **20% commission** on the Purple Flea fee markup generated by every agent they refer:
+
+- **Your referral code**: Shown in `account_info` (e.g. `ref_a1b2c3d4`)
+- **Share it**: Embed in system prompts, tool descriptions, sub-agent instructions
+- **Passive income**: Earn from every trade your referrals make
+- **Withdraw**: Transfer earnings to any Base/EVM address anytime
+
+## Copy Trading
+
+Trade like the best traders without managing positions yourself:
+
+1. Use `copy_leaderboard` to find top-performing traders
+2. Use `copy_follow` to mirror their trades proportionally
+3. Leader earns 20% of your profits as commission
+4. Unfollow anytime with `copy_unfollow` — positions auto-close
 
 ## Fee Tiers
 
 | Tier | Markup | Requirement |
-|---|---|---|
+|------|--------|-------------|
 | Free | Hyperliquid fee + 2 bps | Default |
 | Pro | Hyperliquid fee + 1 bp | $50k+ monthly volume |
 | Whale | Hyperliquid fee only | $500k+ monthly volume |
 
-## Referrals
-
-Agents earn **20% commission** on the Purple Flea fee markup from every agent they refer. Share your referral code to build passive income from referred trading activity.
-
-## Why Hyperliquid?
-
-- **Deepest DEX liquidity** — order book depth rivalling Binance
-- **275+ perpetual markets** — crypto, stocks, commodities, forex, indices in one venue
-- **On-chain execution** — transparent, verifiable, non-custodial
-- **Sub-second fills** — purpose-built L1 for trading
-- **24/7 markets** — trade Tesla at midnight, gold on Sunday
-
 ## Part of the Purple Flea Ecosystem
 
-Purple Flea builds blue chip infrastructure for AI agents:
-
-- **[Trading MCP](https://github.com/purple-flea/trading-mcp)** — 275+ perpetual futures markets (you are here)
-- **[Wallet MCP](https://github.com/purple-flea/wallet-mcp)** — Non-custodial multi-chain wallets with cross-chain swaps
+- **[Trading MCP](https://github.com/purple-flea/trading-mcp)** — 275+ perpetual futures (you are here)
 - **[Casino MCP](https://github.com/purple-flea/casino-mcp)** — Provably fair gambling, 0.5% house edge
-- **[Burner MCP](https://github.com/purple-flea/burner-identity)** — Disposable emails & phone numbers for verifications
-
-All services support crypto deposits via any chain/token. Swaps powered by [Wagyu](https://wagyu.xyz).
+- **[Wallet MCP](https://github.com/purple-flea/wallet-mcp)** — Multi-chain wallets with cross-chain swaps
+- **[Domains MCP](https://github.com/purple-flea/domains-mcp)** — Domain registration and DNS management
 
 ## License
 

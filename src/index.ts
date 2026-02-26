@@ -3,8 +3,8 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
-const BASE_URL = process.env.TRADING_API_URL || "http://localhost:3003";
-const API_KEY = process.env.TRADING_API_KEY || "";
+const BASE_URL = process.env.TRADING_API_URL || "https://trading.purpleflea.com";
+let API_KEY = process.env.TRADING_API_KEY || "";
 
 async function api(method: string, path: string, body?: unknown) {
   const url = `${BASE_URL}/v1${path}`;
@@ -38,7 +38,7 @@ function result(data: unknown) {
 
 const server = new McpServer({
   name: "purple-flea-trading",
-  version: "1.0.0",
+  version: "1.1.0",
 });
 
 // ─── register ───────────────────────────────────────────────────────────────
@@ -58,6 +58,9 @@ server.tool(
   },
   async ({ referral_code, wallet_agent_id }) => {
     const data = await api("POST", "/auth/register", { referral_code, wallet_agent_id });
+    if (data && typeof data === "object" && "api_key" in data) {
+      API_KEY = (data as { api_key: string }).api_key;
+    }
     return text(data);
   },
 );
@@ -267,6 +270,104 @@ server.tool(
   },
 );
 
+// ─── copy_follow ─────────────────────────────────────────────────────────────
+
+server.tool(
+  "copy_follow",
+  "Start copy trading a top-performing agent on Purple Flea Trading. Proportional positions automatically open in your account whenever the leader trades. Leader earns 20% of your profits as commission. Set allocation and optional risk limits.",
+  {
+    leader_agent_id: z
+      .string()
+      .describe("Agent ID of the trader to copy (e.g. ag_abc123). Find top traders with copy_leaderboard."),
+    allocation_usdc: z
+      .number()
+      .positive()
+      .describe("USD amount to allocate for copy trading this leader. Positions scale proportionally to this allocation."),
+    max_position_size: z
+      .number()
+      .positive()
+      .optional()
+      .describe("Maximum USD size for any single copied position. Caps individual trade exposure."),
+    stop_loss_pct: z
+      .number()
+      .min(0.01)
+      .max(100)
+      .optional()
+      .describe("Auto stop-loss percentage for copied positions. Example: 10 = close if position drops 10%."),
+  },
+  async ({ leader_agent_id, allocation_usdc, max_position_size, stop_loss_pct }) => {
+    const body: Record<string, unknown> = { allocation_usdc };
+    if (max_position_size !== undefined) body.max_position_size = max_position_size;
+    if (stop_loss_pct !== undefined) body.stop_loss_pct = stop_loss_pct;
+    const data = await api("POST", `/copy/follow/${encodeURIComponent(leader_agent_id)}`, body);
+    return result(data);
+  },
+);
+
+// ─── copy_unfollow ───────────────────────────────────────────────────────────
+
+server.tool(
+  "copy_unfollow",
+  "Stop copy trading a leader. Any open copied positions will be closed automatically. Deactivates the copy subscription.",
+  {
+    leader_agent_id: z
+      .string()
+      .describe("Agent ID of the leader to stop copying (e.g. ag_abc123)."),
+  },
+  async ({ leader_agent_id }) => {
+    const data = await api("DELETE", `/copy/follow/${encodeURIComponent(leader_agent_id)}`);
+    return result(data);
+  },
+);
+
+// ─── copy_following ──────────────────────────────────────────────────────────
+
+server.tool(
+  "copy_following",
+  "View all agents you are currently copy trading. Shows allocation, position limits, and subscription details for each active copy subscription.",
+  {},
+  async () => {
+    const data = await api("GET", "/copy/following");
+    return text(data);
+  },
+);
+
+// ─── copy_leaderboard ────────────────────────────────────────────────────────
+
+server.tool(
+  "copy_leaderboard",
+  "View the top 10 traders ranked by 30-day P&L on Purple Flea Trading. Shows PnL percentage, follower count, and total allocated USDC. Identify the best traders to copy.",
+  {},
+  async () => {
+    const data = await api("GET", "/copy/leaderboard");
+    return text(data);
+  },
+);
+
+// ─── signals ─────────────────────────────────────────────────────────────────
+
+server.tool(
+  "signals",
+  "Get top trading signals — top 5 crypto and top 5 RWA (stocks/commodities/indices/forex) markets scored by leverage and opportunity. No authentication required. Use to find the best markets to trade right now.",
+  {},
+  async () => {
+    const data = await api("GET", "/markets/signals");
+    return text(data);
+  },
+);
+
+// ─── gossip ──────────────────────────────────────────────────────────────────
+
+server.tool(
+  "gossip",
+  "Get Purple Flea Trading gossip: live agent count, referral program details, and passive income opportunities. No authentication required. Share your referral code to earn 20% of fee markup from agents you refer.",
+  {},
+  async () => {
+    const data = await api("GET", "/gossip");
+    return text(data);
+  },
+);
+
 // ─── referral_stats ─────────────────────────────────────────────────────────
 
 server.tool(
@@ -274,7 +375,23 @@ server.tool(
   "View your referral earnings and statistics. Referring agents earn 20% commission on the Purple Flea fee markup generated by every agent they refer. Share your referral code to build passive income from the trading activity of agents you onboard.",
   {},
   async () => {
-    const data = await api("GET", "/auth/referral-stats");
+    const data = await api("GET", "/referral/stats");
+    return result(data);
+  },
+);
+
+// ─── referral_withdraw ───────────────────────────────────────────────────────
+
+server.tool(
+  "referral_withdraw",
+  "Withdraw your referral commission earnings to a Base/Ethereum address. Minimum $1.00 withdrawal. You earn 20% of fee markup from every agent you've referred.",
+  {
+    address: z
+      .string()
+      .describe("Destination wallet address (0x... Base/EVM address to receive USDC)"),
+  },
+  async ({ address }) => {
+    const data = await api("POST", "/referral/withdraw", { address });
     return result(data);
   },
 );
